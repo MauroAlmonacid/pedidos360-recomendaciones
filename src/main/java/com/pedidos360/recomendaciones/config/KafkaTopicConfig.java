@@ -36,13 +36,4 @@ public class KafkaTopicConfig {
                 .build();
     }
 
-    // 3. Manejo de errores en consumidores: reintenta 3 veces (cada 2s) y registra mensajes corruptos sin tumbar el servicio
-    @Bean
-    public DefaultErrorHandler kafkaErrorHandler() {
-        FixedBackOff backOff = new FixedBackOff(2000L, 3L);
-        return new DefaultErrorHandler((record, exception) -> {
-            log.error("[Kafka Error Handler] Mensaje defectuoso descartado tras 3 reintentos. Tópico: {}, Offset: {}, Payload: {}, Motivo: {}",
-                    record.topic(), record.offset(), record.value(), exception.getMessage());
-        }, backOff);
-    }
 }
